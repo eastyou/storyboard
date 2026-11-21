@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "storyboard"
+version = "0.1.0"
+description = "定格动画分镜纸：A4 可打印分镜表格生成器"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "eastyou" }]
+keywords = ["storyboard", "animation", "education", "print", "cli", "teacher"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+  "Topic :: Education",
+]
+
+[project.scripts]
+storyboard = "storyboard.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/eastyou/storyboard"
+Source = "https://github.com/eastyou/storyboard"
+
+[tool.setuptools]
+packages = ["storyboard"]

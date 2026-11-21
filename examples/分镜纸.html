@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分镜纸</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    padding: 16px 0 28px;
+    background: #e2e8f0;
+    color: #0f172a;
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+      "Source Han Sans SC", sans-serif;
+    overflow-x: hidden;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: min(210mm, calc(100vw - 12px));
+    margin: 0 auto 14px;
+    container-type: inline-size;
+  }
+  .sheet {
+    width: 100%;
+    aspect-ratio: 210 / 297;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 5.238cqw 5.714cqw 4.286cqw;
+    background: #fff;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16);
+    break-inside: avoid;
+  }
+  .board-head {
+    flex: 0 0 11.429cqw;
+    min-height: 0;
+  }
+  .head-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2mm;
+    font-size: 1.428cqw;
+    line-height: 1.2;
+    color: #475569;
+  }
+  .project { letter-spacing: 0.5pt; white-space: nowrap; }
+  .tag { font-size: 1.176cqw; color: #94a3b8; white-space: nowrap; }
+  .board-title {
+    margin: 0.8mm 0 1mm;
+    text-align: center;
+    font-size: 2.688cqw;
+    font-weight: 600;
+    letter-spacing: 5pt;
+    line-height: 1.15;
+  }
+  .meta {
+    display: flex;
+    gap: 6cqw;
+    font-size: 1.344cqw;
+    line-height: 1.2;
+    color: #475569;
+  }
+  .field { display: inline-flex; align-items: flex-end; gap: 1mm; }
+  .field i {
+    display: inline-block;
+    width: 8.095cqw;
+    height: 1.1em;
+    border-bottom: 0.2mm solid #94a3b8;
+  }
+  .board-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    gap: 1.905cqw;
+  }
+  .frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    padding: 1.19cqw;
+    border: 0.143cqw solid #475569;
+    border-radius: 0.8mm;
+    background: #fff;
+  }
+  .frame-head {
+    flex: 0 0 2.381cqw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5mm;
+    width: 100%;
+    font-size: 1.428cqw;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .no {
+    font-size: 1.512cqw;
+    font-weight: 700;
+    letter-spacing: 0.5pt;
+  }
+  .shots {
+    display: flex;
+    gap: 2mm;
+    font-size: 1.176cqw;
+    color: #64748b;
+  }
+  .canvas-wrap {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .canvas {
+    flex: 0 0 auto;
+    border: 0.35mm solid #0f172a;
+    background: #fff;
+  }
+  .frame.span-full {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 4mm;
+    align-items: stretch;
+  }
+  .frame.span-full .frame-head {
+    grid-column: 1 / -1;
+    align-self: start;
+  }
+  .frame.span-full .canvas-wrap {
+    grid-column: 1;
+    align-self: center;
+  }
+  .frame.span-full .lines {
+    grid-column: 2;
+    align-self: stretch;
+  }
+  .frame.span-full .canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .frame.span-full .canvas[data-ratio="4:3"] { aspect-ratio: 4 / 3; }
+  .frame.span-full .canvas[data-ratio="16:9"] { aspect-ratio: 16 / 9; }
+  .lines {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 8.571cqw;
+  }
+  .line {
+    flex: 1 1 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5mm;
+    min-height: 0;
+    border-bottom: 0.2mm solid #cbd5e1;
+  }
+  .line:last-child { border-bottom-color: #94a3b8; }
+  .line-label {
+    flex: 0 0 7.2cqw;
+    font-size: 1.176cqw;
+    line-height: 1.1;
+    color: #334155;
+    white-space: nowrap;
+  }
+  .line-rule { flex: 1 1 auto; }
+  .board-foot {
+    flex: 0 0 3.333cqw;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 0.6mm;
+    border-top: 0.2mm solid #e2e8f0;
+    font-size: 1.176cqw;
+    color: #64748b;
+  }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { padding: 0; background: #fff; }
+    .page {
+      width: 210mm;
+      margin: 0;
+      break-after: page;
+      page-break-after: always;
+    }
+    .page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      aspect-ratio: auto;
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page"><section class="sheet"><header class="board-head"><div class="head-top"><span class="project">项目：我的定格动画</span><span class="tag">A4 纵向 · 4:3 · 2 列</span></div><h1 class="board-title">分镜纸</h1><div class="meta"><span class="field">姓名：<i></i></span><span class="field">小组：<i></i></span><span class="field">日期：<i></i></span></div></header><main class="board-grid style-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))"><article class="frame"><div class="frame-head"><span class="no">01</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article><article class="frame"><div class="frame-head"><span class="no">02</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article><article class="frame span-full"><div class="frame-head"><span class="no">03</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article></main><footer class="board-foot"><span>第 1 / 2 页</span><span>共 6 格</span></footer></section></div>
+<div class="page"><section class="sheet"><header class="board-head"><div class="head-top"><span class="project">项目：我的定格动画</span><span class="tag">A4 纵向 · 4:3 · 2 列</span></div><h1 class="board-title">分镜纸</h1><div class="meta"><span class="field">姓名：<i></i></span><span class="field">小组：<i></i></span><span class="field">日期：<i></i></span></div></header><main class="board-grid style-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))"><article class="frame"><div class="frame-head"><span class="no">04</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article><article class="frame"><div class="frame-head"><span class="no">05</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article><article class="frame span-full"><div class="frame-head"><span class="no">06</span><span class="shots"><span class="shot">□ 远景</span><span class="shot">□ 中景</span><span class="shot">□ 近景</span><span class="shot">□ 特写</span></span></div><div class="canvas-wrap"><div class="canvas" data-ratio="4:3" style="width:40.667cqw;height:30.5cqw"></div></div><div class="lines"><div class="line"><span class="line-label">画面说明</span><span class="line-rule"></span></div><div class="line"><span class="line-label">台词/音效</span><span class="line-rule"></span></div><div class="line"><span class="line-label">时长（秒）</span><span class="line-rule"></span></div></div></article></main><footer class="board-foot"><span>第 2 / 2 页</span><span>共 6 格</span></footer></section></div>
+</body>
+</html>
